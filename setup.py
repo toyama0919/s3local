@@ -17,7 +17,7 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
     ],
-    keywords="s3local tool aws",
+    keywords="s3local tool aws s3",
     author="Hiroshi Toyama",
     author_email="toyama0919@gmail.com",
     url="https://github.com/toyama0919/s3local",
