@@ -15,10 +15,16 @@ class Util:
         results = {}
         for path in paths:
             if os.path.isfile(path):
-                results[path] = path.lstrip(str(parent))
+                relative_path = Util._remove_prefix(path, str(parent) + "/")
+                results[path] = relative_path
         return results
 
     @staticmethod
     def get_bucket_and_prefix_from_url(url):
         o = urlparse(url)
         return o.scheme, o.netloc, o.path.lstrip("/")
+
+    def _remove_prefix(text, prefix):
+        if text.startswith(prefix):
+            return text[len(prefix):]
+        return text
