@@ -5,15 +5,16 @@ import shutil
 
 from .logger import get_logger
 from .util import Util
-
-
-DEFAULT_S3LOCAL_ROOT = (
-    os.environ.get("S3LOCAL_ROOT") or f"{os.environ.get('HOME')}/.s3local"
-)
+from . import constants
 
 
 class Core:
-    def __init__(self, url, root=DEFAULT_S3LOCAL_ROOT, logger=get_logger()):
+    def __init__(
+        self,
+        url,
+        root=os.environ.get("S3LOCAL_ROOT") or constants.DEFAULT_S3LOCAL_ROOT,
+        logger=get_logger(),
+    ):
         scheme, bucket_name, prefix = Util.get_bucket_and_prefix_from_url(url)
         self.bucket_name = bucket_name
         self.prefix = prefix
