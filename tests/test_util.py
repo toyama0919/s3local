@@ -1,3 +1,4 @@
+import os
 from s3local.util import Util
 
 
@@ -9,5 +10,6 @@ class TestUtil(object):
         pass
 
     def test_pad_zero(self):
-        # assert s3.get("2020-03") == 0
-        pass
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        pair = Util.relative_files_from_dir(f"{dir_path}/data")
+        assert pair[f"{dir_path}/data/a.txt"] == "data/a.txt"

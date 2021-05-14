@@ -1,6 +1,6 @@
 import pytest
-import s3local
 from s3local import commands
+from s3local import constants
 from click.testing import CliRunner
 
 
@@ -12,4 +12,4 @@ def runner():
 def test_show_version(runner):
     result = runner.invoke(commands.cli, ["-v"])
     assert result.exit_code == 0
-    assert result.output.strip() == s3local.VERSION
+    assert result.output.strip() == constants.VERSION
