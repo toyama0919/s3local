@@ -1,7 +1,7 @@
 # s3local
 
 [![PyPI version](https://badge.fury.io/py/s3local.svg)](https://badge.fury.io/py/s3local)
-[![Build Status](https://secure.travis-ci.org/toyama0919/s3local.png?branch=master)](http://travis-ci.org/toyama0919/s3local)
+[![tests](https://github.com/toyama0919/s3local/actions/workflows/tests.yml/badge.svg)](https://github.com/toyama0919/s3local/actions/workflows/tests.yml)
 
 Cache the object in s3 to localhost.
 
