@@ -3,38 +3,54 @@
 [![PyPI version](https://badge.fury.io/py/s3local.svg)](https://badge.fury.io/py/s3local)
 [![Build Status](https://secure.travis-ci.org/toyama0919/s3local.png?branch=master)](http://travis-ci.org/toyama0919/s3local)
 
-Command Line utility for Amazon Aurora.
+Cache the object in s3 to localhost.
+
+Create a cache corresponding to s3 and automatically create a path for localhost and return it.
+
+Once downloaded files remain in localhost as cache, the second migration download will be skipped
 
 Support python3 only. (use boto3)
 
 ## Settings
 
-```sh
-export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXXXXXX
-export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-export AWS_DEFAULT_REGION=xx-xxxxxxx-x
-```
+aws auth support following.
 
-* support environment variables and iam role.
+* environment variables
+* profile(use --aws-profile option.)
+* instance profile
 
 ## Examples
 
-#### list instance and cluster
+#### download object and list object
 
 ```bash
-$ s3local list
+$ s3local download -u s3://mybucket/artifacts/ --debug
+2021-05-14 11:27:13,367 DEBUG - Copying: s3://mybucket/artifacts/main.log > /Users/hiroshi.toyama/.s3local/s3/mybucket/artifacts/main.log
+2021-05-14 11:27:13,367 DEBUG - Copying: s3://mybucket/artifacts/main2.log > /Users/hiroshi.toyama/.s3local/s3/mybucket/artifacts/main2.log
+2021-05-14 11:27:13,367 DEBUG - Copying: s3://mybucket/artifacts/main3.log > /Users/hiroshi.toyama/.s3local/s3/mybucket/artifacts/main3.log
+```
 
-[instances]
-db01 mysql available db.m3.xlarge  ap-northeast-1c None
-db02 mysql available db.m3.xlarge  ap-northeast-1c None
-db03 mysql available db.m3.large ap-northeast-1c None
-db04 mysql available db.m3.large ap-northeast-1c None
-db05 aurora available db.t2.medium  ap-northeast-1c aurora-cluster
-db06 aurora available db.t2.medium  ap-northeast-1c aurora-cluster
+By default `$HOME/.s3local` is the root directory.
 
-[clusters]
-aurora-cluster available aurora  ['db05', 'db06']
-...
+The format of path in local is as follows:
+
+```
+$HOME/.s3local/s3/${bucket}/${key}
+```
+
+You can change root by setting an environment variable S3LOCAL_ROOT.
+
+```bash
+$ s3local list-local -u s3://mybucket/artifacts/
+/Users/hiroshi.toyama/.s3local/s3/mybucket/artifacts/main.log
+/Users/hiroshi.toyama/.s3local/s3/mybucket/artifacts/main2.log
+/Users/hiroshi.toyama/.s3local/s3/mybucket/artifacts/main3.log
+```
+
+## Python API
+
+```python
+
 ```
 
 ## Installation
