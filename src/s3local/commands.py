@@ -25,9 +25,7 @@ class Mash(object):
 @click.option(
     "--version/--no-version", "-v", default=False, help="show version. (default: False)"
 )
-@click.option(
-    "--aws-profile", default=None, help="aws profile name"
-)
+@click.option("--aws-profile", default=None, help="aws profile name")
 @click.pass_context
 def cli(ctx, version, aws_profile):
     ctx.obj = Mash()

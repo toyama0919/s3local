@@ -25,10 +25,10 @@ class Core:
         os.makedirs(self.root, exist_ok=True)
         self.local_path = os.path.join(self.root, prefix)
         self.bucket = (
-            Session()
-            if aws_profile is None
-            else Session(profile_name=aws_profile)
-        ).resource("s3").Bucket(bucket_name)
+            (Session() if aws_profile is None else Session(profile_name=aws_profile))
+            .resource("s3")
+            .Bucket(bucket_name)
+        )
         self.logger = logger
         self.download_paths = []
 
