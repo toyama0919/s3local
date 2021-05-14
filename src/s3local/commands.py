@@ -25,9 +25,13 @@ class Mash(object):
 @click.option(
     "--version/--no-version", "-v", default=False, help="show version. (default: False)"
 )
+@click.option(
+    "--aws-profile", default=None, help="aws profile name"
+)
 @click.pass_context
-def cli(ctx, version):
+def cli(ctx, version, aws_profile):
     ctx.obj = Mash()
+    ctx.obj.aws_profile = aws_profile
     if version:
         print(constants.VERSION)
         sys.exit()
@@ -61,8 +65,8 @@ def list(ctx, url, debug):
 @global_options
 @click.option("--skip-exist/--no-skip-exist", default=True, help="download files")
 @click.pass_context
-def download(ctx, url, skip_exist):
-    s3local = Core(url=url)
+def download(ctx, url, debug, skip_exist):
+    s3local = Core(url=url, logger=get_logger(debug=debug))
     s3local.download(skip_exist=skip_exist)
 
 
@@ -74,7 +78,7 @@ def delete(ctx, url, debug):
     s3local.delete()
 
 
-@cli.command(help="delete file by s3.")
+@cli.command(help="upload file to s3.")
 @click.option("--source", "-s", type=str, required=True)
 @global_options
 @click.pass_context

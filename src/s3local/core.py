@@ -13,6 +13,7 @@ class Core:
         self,
         url,
         root=os.environ.get("S3LOCAL_ROOT") or constants.DEFAULT_S3LOCAL_ROOT,
+        aws_profile=None,
         logger=get_logger(),
     ):
         scheme, bucket_name, prefix = Util.get_bucket_and_prefix_from_url(url)
@@ -21,9 +22,13 @@ class Core:
         self.recursive = True if prefix.endswith("/") else False
 
         self.root = os.path.join(root, scheme, bucket_name)
-        self.local_path = os.path.join(self.root, prefix)
         os.makedirs(self.root, exist_ok=True)
-        self.bucket = Session().resource("s3").Bucket(bucket_name)
+        self.local_path = os.path.join(self.root, prefix)
+        self.bucket = (
+            Session()
+            if aws_profile is None
+            else Session(profile_name=aws_profile)
+        ).resource("s3").Bucket(bucket_name)
         self.logger = logger
         self.download_paths = []
 
