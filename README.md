@@ -9,7 +9,7 @@ Create a cache corresponding to s3 and automatically create a path for localhost
 
 Once downloaded files remain in localhost as cache, the second migration download will be skipped
 
-Support python3 only. (use boto3)
+works on python3.6 or higher
 
 ## Settings
 
