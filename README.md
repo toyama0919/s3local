@@ -28,6 +28,18 @@ $ s3local download -u s3://mybucket/artifacts/ --debug
 2021-05-14 11:27:13,367 DEBUG - Copying: s3://mybucket/artifacts/main.log > /Users/hiroshi.toyama/.s3local/s3/mybucket/artifacts/main.log
 2021-05-14 11:27:13,367 DEBUG - Copying: s3://mybucket/artifacts/main2.log > /Users/hiroshi.toyama/.s3local/s3/mybucket/artifacts/main2.log
 2021-05-14 11:27:13,367 DEBUG - Copying: s3://mybucket/artifacts/main3.log > /Users/hiroshi.toyama/.s3local/s3/mybucket/artifacts/main3.log
+
+# next download is skip
+$ s3local download -u s3://mybucket/artifacts/ --debug
+2021-05-14 14:08:02,970 DEBUG - skip already exists in local: s3://mybucket/artifacts/main.log
+2021-05-14 14:08:02,970 DEBUG - skip already exists in local: s3://mybucket/artifacts/main2.log
+2021-05-14 14:08:02,970 DEBUG - skip already exists in local: s3://mybucket/artifacts/main3.log
+
+# overwrite download. (not skip)
+$ s3local download -u s3://mybucket/artifacts/ --debug --no-skip-exist
+2021-05-14 11:27:13,367 DEBUG - Copying: s3://mybucket/artifacts/main.log > /Users/hiroshi.toyama/.s3local/s3/mybucket/artifacts/main.log
+2021-05-14 11:27:13,367 DEBUG - Copying: s3://mybucket/artifacts/main2.log > /Users/hiroshi.toyama/.s3local/s3/mybucket/artifacts/main2.log
+2021-05-14 11:27:13,367 DEBUG - Copying: s3://mybucket/artifacts/main3.log > /Users/hiroshi.toyama/.s3local/s3/mybucket/artifacts/main3.log
 ```
 
 By default `$HOME/.s3local` is the root directory.
