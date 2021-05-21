@@ -1,6 +1,8 @@
 import click
 import sys
 from .core import Core
+from .uploader import Uploader
+from .downloader import Downloader
 from . import constants
 from .logger import get_logger
 
@@ -43,7 +45,7 @@ def cli(ctx, version, aws_profile):
 @click.option("--download/--no-download", "-d", default=False, help="download files")
 @click.pass_context
 def list_local(ctx, url, debug, download):
-    s3local = Core(url=url, logger=get_logger(debug=debug))
+    s3local = Downloader(url=url, logger=get_logger(debug=debug))
     paths = s3local.list_local_path(download=download)
     for path in paths:
         print(path)
@@ -53,7 +55,7 @@ def list_local(ctx, url, debug, download):
 @global_options
 @click.pass_context
 def list(ctx, url, debug):
-    s3local = Core(url=url, logger=get_logger(debug=debug))
+    s3local = Downloader(url=url, logger=get_logger(debug=debug))
     paths = s3local.list_download_path()
     for path in paths:
         print(path)
@@ -64,7 +66,7 @@ def list(ctx, url, debug):
 @click.option("--skip-exist/--no-skip-exist", default=True, help="download files")
 @click.pass_context
 def download(ctx, url, debug, skip_exist):
-    s3local = Core(url=url, logger=get_logger(debug=debug))
+    s3local = Downloader(url=url, logger=get_logger(debug=debug))
     s3local.download(skip_exist=skip_exist)
 
 
@@ -81,7 +83,7 @@ def delete(ctx, url, debug):
 @global_options
 @click.pass_context
 def upload(ctx, source, url, debug):
-    s3local = Core(url=url, logger=get_logger(debug=debug))
+    s3local = Uploader(url=url, logger=get_logger(debug=debug))
     s3local.upload(source_path=source)
 
 
