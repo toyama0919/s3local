@@ -61,10 +61,12 @@ $ s3local list-local -u s3://mybucket/artifacts/
 
 ## Python API
 
-```python
-from s3local import S3local
+### download
 
-s3local = S3local("s3://mybucket/artifacts/")
+```python
+from s3local import Downloader
+
+s3local = Downloader("s3://mybucket/artifacts/")
 list = s3local.list_local_path(download=True)
 print(list)
 #=> [
@@ -72,6 +74,21 @@ print(list)
 #     "/Users/hiroshi.toyama/.s3local/s3/mybucket/artifacts/main2.log",
 #     "/Users/hiroshi.toyama/.s3local/s3/mybucket/artifacts/main3.log",
 # ]
+
+```
+
+### upload
+
+```python
+from s3local import Uploader
+
+s3local = Uploader("s3://mybucket/artifacts/")
+
+uploader.upload("output/hoge.txt")
+#=> s3://mybucket/artifacts/hoge.txt
+
+uploader.upload("output")
+#=> s3://mybucket/artifacts/output/hoge.txt
 
 ```
 
