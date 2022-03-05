@@ -47,3 +47,7 @@ class Core:
             self.bucket.delete_object(
                 Key=self.prefix,
             )
+
+    def exists_key(self, key):
+        keys = self.bucket.objects.filter(Prefix=key)
+        return key in [k.key for k in keys]

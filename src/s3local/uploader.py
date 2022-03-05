@@ -6,7 +6,7 @@ from .core import Core
 
 
 class Uploader(Core):
-    def upload(self, source_path):
+    def upload(self, source_path, skip_exist=True):
         basename = os.path.basename(source_path)
 
         if os.path.isfile(source_path):
@@ -15,7 +15,12 @@ class Uploader(Core):
             else:
                 # change basename
                 key = self.prefix
-            self.upload_file(source_path, key)
+
+            # Check if the key exists
+            if skip_exist and self.exists_key(key=key):
+                self.logger.info(f"skip upload {source_path} > {key}")
+            else:
+                self.upload_file(source_path, key)
         elif os.path.isdir(source_path):
             if self.recursive:
                 objects = self.bucket.objects.filter(

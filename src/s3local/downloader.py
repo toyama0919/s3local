@@ -4,28 +4,33 @@ from .core import Core
 
 
 class Downloader(Core):
-    def download_file(self, key, dryrun=False, skip_exist=True):
-        dst_path = f"{self.root}/{key}"
+    def download_file(self, key, dryrun=False, skip_exist=True, dst_path=None):
+        dst_path = dst_path or f"{self.root}/{key}"
         dst_dir_path = os.path.dirname(dst_path)
         s3_url = f"s3://{self.bucket_name}/{key}"
         os.makedirs(dst_dir_path, exist_ok=True)
         if os.path.exists(dst_path) and skip_exist:
-            self.logger.debug(f"skip already exists in local: {s3_url}")
+            self.logger.info(f"skip already exists in local: {s3_url} > {dst_path}")
         else:
             self.logger.debug(f"Copying: {s3_url} > {dst_path}")
             if not dryrun:
                 self.bucket.download_file(key, dst_path)
         self.download_paths.append(dst_path)
 
-    def download(self, dryrun=False, skip_exist=True):
+    def download(self, dryrun=False, skip_exist=True, dst_path=None):
         if self.recursive:
             objects = self.bucket.objects.filter(
                 Prefix=self.prefix,
             )
             for key in [o.key for o in objects]:
-                self.download_file(key, dryrun, skip_exist=skip_exist)
+                dst_path = f"{dst_path}/{os.path.basename(key)}" if dst_path else None
+                self.download_file(
+                    key, dryrun, skip_exist=skip_exist, dst_path=dst_path
+                )
         else:
-            self.download_file(self.prefix, dryrun, skip_exist=skip_exist)
+            self.download_file(
+                self.prefix, dryrun, skip_exist=skip_exist, dst_path=dst_path
+            )
 
     def list_download_path(self):
         self.download()
