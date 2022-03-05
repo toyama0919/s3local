@@ -23,14 +23,14 @@ class Downloader(Core):
                 Prefix=self.prefix,
             )
             for key in [o.key for o in objects]:
-                dst_path = (
-                    f"{dst_path}/{os.path.basename(key)}"
-                    if dst_path
-                    else None
+                dst_path = f"{dst_path}/{os.path.basename(key)}" if dst_path else None
+                self.download_file(
+                    key, dryrun, skip_exist=skip_exist, dst_path=dst_path
                 )
-                self.download_file(key, dryrun, skip_exist=skip_exist, dst_path=dst_path)
         else:
-            self.download_file(self.prefix, dryrun, skip_exist=skip_exist, dst_path=dst_path)
+            self.download_file(
+                self.prefix, dryrun, skip_exist=skip_exist, dst_path=dst_path
+            )
 
     def list_download_path(self):
         self.download()
