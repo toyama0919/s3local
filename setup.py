@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import os
 
 here = os.path.abspath(os.path.dirname(__file__))
-install_requires = ["tabulate", "boto3", "click>=7.0"]
+install_requires = ["boto3", "click>=7.0"]
 extras_require = {"test": ["tox"]}
 
 setup(
