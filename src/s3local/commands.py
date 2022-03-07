@@ -44,7 +44,7 @@ def cli(ctx, version, aws_profile):
 @global_options
 @click.option("--download/--no-download", "-d", default=False, help="download files")
 @click.pass_context
-def list_local(ctx, url, debug, download):
+def list_local(ctx, url: str, debug: str, download):
     s3local = Downloader(url=url, logger=get_logger(debug=debug))
     paths = s3local.list_local_path(download=download)
     for path in paths:
@@ -65,7 +65,7 @@ def list(ctx, url, debug):
 @global_options
 @click.option("--skip-exist/--no-skip-exist", default=True, help="download files")
 @click.pass_context
-def download(ctx, url, debug, skip_exist):
+def download(ctx, url: str, debug: str, skip_exist: bool):
     s3local = Downloader(url=url, logger=get_logger(debug=debug))
     s3local.download(skip_exist=skip_exist)
 
@@ -73,7 +73,7 @@ def download(ctx, url, debug, skip_exist):
 @cli.command(help="delete file by s3.")
 @global_options
 @click.pass_context
-def delete(ctx, url, debug):
+def delete(ctx, url: str, debug: bool):
     s3local = Core(url=url, logger=get_logger(debug=debug))
     s3local.delete()
 
@@ -82,7 +82,7 @@ def delete(ctx, url, debug):
 @click.option("--source", "-s", type=str, required=True)
 @global_options
 @click.pass_context
-def upload(ctx, source, url, debug):
+def upload(ctx, source: str, url: str, debug: str):
     s3local = Uploader(url=url, logger=get_logger(debug=debug))
     s3local.upload(source_path=source)
 

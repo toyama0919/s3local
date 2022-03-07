@@ -9,7 +9,7 @@ class TestUtil(object):
     def teardown_method(self, method):
         pass
 
-    def test_pad_zero(self):
+    def test_relative_files_from_dir(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         pair = Util.relative_files_from_dir(f"{dir_path}/data")
         assert pair[f"{dir_path}/data/a.txt"] == "data/a.txt"

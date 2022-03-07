@@ -6,7 +6,7 @@ from .core import Core
 
 
 class Uploader(Core):
-    def upload(self, source_path, skip_exist=True):
+    def upload(self, source_path: str, skip_exist: bool = True):
         basename = os.path.basename(source_path)
 
         if os.path.isfile(source_path):
@@ -37,7 +37,7 @@ class Uploader(Core):
             else:
                 raise "not implement"
 
-    def upload_file(self, local_path, key):
+    def upload_file(self, local_path: str, key: str):
         # copy local
         dst_path = os.path.join(self.root, key)
         self.logger.debug(f"Copying to local: {local_path} => {dst_path}")
