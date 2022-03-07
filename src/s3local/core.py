@@ -10,9 +10,9 @@ from . import constants
 class Core:
     def __init__(
         self,
-        url,
-        root=os.environ.get("S3LOCAL_ROOT") or constants.DEFAULT_S3LOCAL_ROOT,
-        aws_profile=None,
+        url: str,
+        root: str = (os.environ.get("S3LOCAL_ROOT") or constants.DEFAULT_S3LOCAL_ROOT),
+        aws_profile: str = None,
         logger=get_logger(),
     ):
         scheme, bucket_name, prefix = Util.get_bucket_and_prefix_from_url(url)
@@ -31,7 +31,7 @@ class Core:
         self.logger = logger
         self.download_paths = []
 
-    def get_local_root(self):
+    def get_local_root(self) -> str:
         return self.root
 
     def delete(self):
@@ -48,6 +48,6 @@ class Core:
                 Key=self.prefix,
             )
 
-    def exists_key(self, key):
+    def exists_key(self, key: str) -> bool:
         keys = self.bucket.objects.filter(Prefix=key)
         return key in [k.key for k in keys]

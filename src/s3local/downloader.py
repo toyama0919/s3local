@@ -4,7 +4,7 @@ from .core import Core
 
 
 class Downloader(Core):
-    def download_file(self, key, dryrun=False, skip_exist=True, dst_path=None):
+    def download_file(self, key: str, dryrun: bool = False, skip_exist: bool = True, dst_path: str = None):
         dst_path = dst_path or f"{self.root}/{key}"
         dst_dir_path = os.path.dirname(dst_path)
         s3_url = f"s3://{self.bucket_name}/{key}"
@@ -17,7 +17,7 @@ class Downloader(Core):
                 self.bucket.download_file(key, dst_path)
         self.download_paths.append(dst_path)
 
-    def download(self, dryrun=False, skip_exist=True, dst_path=None):
+    def download(self, dryrun: bool = False, skip_exist: bool = True, dst_path: str = None):
         if self.recursive:
             objects = self.bucket.objects.filter(
                 Prefix=self.prefix,
@@ -36,7 +36,7 @@ class Downloader(Core):
         self.download()
         return self.download_paths
 
-    def list_local_path(self, download=False):
+    def list_local_path(self, download: bool = False):
         if download:
             self.download()
 
