@@ -79,12 +79,13 @@ def delete(ctx, url: str, debug: bool):
 
 
 @cli.command(help="upload file to s3.")
-@click.option("--source", "-s", type=str, required=True)
 @global_options
+@click.option("--source", "-s", type=str, required=True)
+@click.option("--skip-exist/--no-skip-exist", default=True, help="download files")
 @click.pass_context
-def upload(ctx, source: str, url: str, debug: str):
+def upload(ctx, url: str, debug: str, source: str, skip_exist: bool):
     s3local = Uploader(url=url, logger=get_logger(debug=debug))
-    s3local.upload(source_path=source)
+    s3local.upload(source_path=source, skip_exist=skip_exist)
 
 
 def main():
