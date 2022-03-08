@@ -7,7 +7,7 @@ extras_require = {"test": ["tox"]}
 
 setup(
     name="s3local",
-    version="0.2.1",
+    version="0.2.2",
     description="Command Line utility for s3 local caching.",
     long_description=open(os.path.join(here, "README.md")).read(),
     long_description_content_type="text/markdown",
