@@ -18,7 +18,7 @@ class Downloader(Core):
         if os.path.exists(dst_path) and skip_exist:
             self.logger.info(f"skip already exists in local: {s3_url} > {dst_path}")
         else:
-            self.logger.debug(f"Copying: {s3_url} > {dst_path}")
+            self.logger.info(f"Copying: {s3_url} > {dst_path}")
             if not dryrun:
                 self.bucket.download_file(key, dst_path)
         self.download_paths.append(dst_path)
@@ -31,9 +31,11 @@ class Downloader(Core):
                 Prefix=self.prefix,
             )
             for key in [o.key for o in objects]:
-                dst_path = f"{dst_path}/{os.path.basename(key)}" if dst_path else None
                 self.download_file(
-                    key, dryrun, skip_exist=skip_exist, dst_path=dst_path
+                    key,
+                    dryrun,
+                    skip_exist=skip_exist,
+                    dst_path=(f"{dst_path}/{os.path.basename(key)}" if dst_path else None)
                 )
         else:
             self.download_file(
