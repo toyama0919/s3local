@@ -35,7 +35,9 @@ class Downloader(Core):
                     key,
                     dryrun,
                     skip_exist=skip_exist,
-                    dst_path=(f"{dst_path}/{os.path.basename(key)}" if dst_path else None)
+                    dst_path=(
+                        f"{dst_path}/{os.path.basename(key)}" if dst_path else None
+                    ),
                 )
         else:
             self.download_file(
