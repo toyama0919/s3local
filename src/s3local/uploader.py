@@ -37,7 +37,7 @@ class Uploader(Core):
             else:
                 raise "not implement"
 
-    def upload_file(self, local_path: str, key: str):
+    def upload_file(self, local_path: str, key: str, extra_args: dict = None):
         # copy local
         dst_path = os.path.join(self.root, key)
         self.logger.debug(f"Copying to local: {local_path} => {dst_path}")
@@ -49,4 +49,4 @@ class Uploader(Core):
         self.logger.info(
             f"Copying to s3: {local_path} => s3://{self.bucket_name}/{key}"
         )
-        self.bucket.upload_file(local_path, key)
+        self.bucket.upload_file(local_path, key, ExtraArgs=extra_args)
