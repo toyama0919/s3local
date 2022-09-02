@@ -5,6 +5,7 @@ from .uploader import Uploader
 from .downloader import Downloader
 from . import constants
 from .logger import get_logger
+import json
 
 
 _global_options = [
@@ -19,11 +20,10 @@ def global_options(func):
     return func
 
 
-def convert_dict(_, __, value):
-    result = {}
-    for key_value in value:
-        k, v = key_value.split(":")
-        result[k] = v
+def parse_json(_, __, value):
+    if value is None:
+        return None
+    result = json.loads(value)
     return result
 
 
@@ -90,7 +90,7 @@ def delete(ctx, url: str, debug: bool):
 @global_options
 @click.option("--source", "-s", type=str, required=True)
 @click.option("--skip-exist/--no-skip-exist", default=True, help="download files")
-@click.option("--extra-args", multiple=True, callback=convert_dict, help="extra args. ext, ContentType:json")
+@click.option("--extra-args", callback=parse_json, help='extra args by json string. ext, {"ContentType": "json", "Tagging": "key1=value2&key2=value2"}')
 @click.pass_context
 def upload(ctx, url: str, debug: str, source: str, skip_exist: bool, extra_args: dict):
     s3local = Uploader(url=url, logger=get_logger(debug=debug))
