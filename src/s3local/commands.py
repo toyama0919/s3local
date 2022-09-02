@@ -19,6 +19,14 @@ def global_options(func):
     return func
 
 
+def convert_dict(_, __, value):
+    result = {}
+    for key_value in value:
+        k, v = key_value.split(":")
+        result[k] = v
+    return result
+
+
 class Mash(object):
     pass
 
@@ -82,10 +90,11 @@ def delete(ctx, url: str, debug: bool):
 @global_options
 @click.option("--source", "-s", type=str, required=True)
 @click.option("--skip-exist/--no-skip-exist", default=True, help="download files")
+@click.option("--extra-args", multiple=True, callback=convert_dict, help="extra args. ext, ContentType:json")
 @click.pass_context
-def upload(ctx, url: str, debug: str, source: str, skip_exist: bool):
+def upload(ctx, url: str, debug: str, source: str, skip_exist: bool, extra_args: dict):
     s3local = Uploader(url=url, logger=get_logger(debug=debug))
-    s3local.upload(source_path=source, skip_exist=skip_exist)
+    s3local.upload(source_path=source, skip_exist=skip_exist, extra_args=extra_args)
 
 
 def main():

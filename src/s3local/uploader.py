@@ -6,7 +6,7 @@ from .core import Core
 
 
 class Uploader(Core):
-    def upload(self, source_path: str, skip_exist: bool = True):
+    def upload(self, source_path: str, skip_exist: bool = True, extra_args: dict = None):
         basename = os.path.basename(source_path)
 
         if os.path.isfile(source_path):
@@ -20,7 +20,7 @@ class Uploader(Core):
             if skip_exist and self.exists_key(key=key):
                 self.logger.info(f"skip upload {source_path} > {key}")
             else:
-                self.upload_file(source_path, key)
+                self.upload_file(source_path, key, extra_args)
         elif os.path.isdir(source_path):
             if self.recursive:
                 objects = self.bucket.objects.filter(
@@ -33,7 +33,7 @@ class Uploader(Core):
                     if upload_key in already_upload_keys:
                         self.logger.info(f"skip upload {upload_key}")
                     else:
-                        self.upload_file(abspath, upload_key)
+                        self.upload_file(abspath, upload_key, extra_args)
             else:
                 raise "not implement"
 
