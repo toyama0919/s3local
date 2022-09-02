@@ -6,7 +6,9 @@ from .core import Core
 
 
 class Uploader(Core):
-    def upload(self, source_path: str, skip_exist: bool = True, extra_args: dict = None):
+    def upload(
+        self, source_path: str, skip_exist: bool = True, extra_args: dict = None
+    ):
         basename = os.path.basename(source_path)
 
         if os.path.isfile(source_path):

@@ -90,7 +90,11 @@ def delete(ctx, url: str, debug: bool):
 @global_options
 @click.option("--source", "-s", type=str, required=True)
 @click.option("--skip-exist/--no-skip-exist", default=True, help="download files")
-@click.option("--extra-args", callback=parse_json, help='extra args by json string. ext, {"ContentType": "json", "Tagging": "key1=value2&key2=value2"}')
+@click.option(
+    "--extra-args",
+    callback=parse_json,
+    help='extra args by json string. ext, {"ContentType": "json", "Tagging": "key1=value2&key2=value2"}',
+)
 @click.pass_context
 def upload(ctx, url: str, debug: str, source: str, skip_exist: bool, extra_args: dict):
     s3local = Uploader(url=url, logger=get_logger(debug=debug))
