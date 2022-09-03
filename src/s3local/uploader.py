@@ -6,7 +6,9 @@ from .core import Core
 
 
 class Uploader(Core):
-    def upload(self, source_path: str, skip_exist: bool = True):
+    def upload(
+        self, source_path: str, skip_exist: bool = True, extra_args: dict = None
+    ):
         basename = os.path.basename(source_path)
 
         if os.path.isfile(source_path):
@@ -20,7 +22,7 @@ class Uploader(Core):
             if skip_exist and self.exists_key(key=key):
                 self.logger.info(f"skip upload {source_path} > {key}")
             else:
-                self.upload_file(source_path, key)
+                self.upload_file(source_path, key, extra_args)
         elif os.path.isdir(source_path):
             if self.recursive:
                 objects = self.bucket.objects.filter(
@@ -33,11 +35,11 @@ class Uploader(Core):
                     if upload_key in already_upload_keys:
                         self.logger.info(f"skip upload {upload_key}")
                     else:
-                        self.upload_file(abspath, upload_key)
+                        self.upload_file(abspath, upload_key, extra_args)
             else:
                 raise "not implement"
 
-    def upload_file(self, local_path: str, key: str):
+    def upload_file(self, local_path: str, key: str, extra_args: dict = None):
         # copy local
         dst_path = os.path.join(self.root, key)
         self.logger.debug(f"Copying to local: {local_path} => {dst_path}")
@@ -49,4 +51,4 @@ class Uploader(Core):
         self.logger.info(
             f"Copying to s3: {local_path} => s3://{self.bucket_name}/{key}"
         )
-        self.bucket.upload_file(local_path, key)
+        self.bucket.upload_file(local_path, key, ExtraArgs=extra_args)

@@ -5,6 +5,7 @@ from .uploader import Uploader
 from .downloader import Downloader
 from . import constants
 from .logger import get_logger
+import json
 
 
 _global_options = [
@@ -17,6 +18,13 @@ def global_options(func):
     for option in reversed(_global_options):
         func = option(func)
     return func
+
+
+def parse_json(_, __, value):
+    if value is None:
+        return None
+    result = json.loads(value)
+    return result
 
 
 class Mash(object):
@@ -82,10 +90,15 @@ def delete(ctx, url: str, debug: bool):
 @global_options
 @click.option("--source", "-s", type=str, required=True)
 @click.option("--skip-exist/--no-skip-exist", default=True, help="download files")
+@click.option(
+    "--extra-args",
+    callback=parse_json,
+    help='extra args by json string. ext, {"ContentType": "json", "Tagging": "key1=value2&key2=value2"}',
+)
 @click.pass_context
-def upload(ctx, url: str, debug: str, source: str, skip_exist: bool):
+def upload(ctx, url: str, debug: str, source: str, skip_exist: bool, extra_args: dict):
     s3local = Uploader(url=url, logger=get_logger(debug=debug))
-    s3local.upload(source_path=source, skip_exist=skip_exist)
+    s3local.upload(source_path=source, skip_exist=skip_exist, extra_args=extra_args)
 
 
 def main():
