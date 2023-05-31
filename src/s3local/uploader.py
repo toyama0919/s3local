@@ -19,8 +19,11 @@ class Uploader(Core):
                 key = self.prefix
 
             # Check if the key exists
-            if skip_exist and self.exists_key(key=key):
-                self.logger.info(f"skip upload {source_path} > {key}")
+            objects = self.bucket.objects.filter(
+                Prefix=key,
+            )
+            if skip_exist and self.should_skip(objects, key=key, source_path=source_path):
+                pass
             else:
                 self.upload_file(source_path, key, extra_args)
         elif os.path.isdir(source_path):
@@ -28,12 +31,12 @@ class Uploader(Core):
                 objects = self.bucket.objects.filter(
                     Prefix=self.prefix,
                 )
-                already_upload_keys = [o.key for o in objects]
                 pair = Util.relative_files_from_dir(directory=source_path)
                 for abspath, relative_path in pair.items():
                     upload_key = f"{self.prefix}{relative_path}"
-                    if upload_key in already_upload_keys:
-                        self.logger.info(f"skip upload {upload_key}")
+
+                    if skip_exist and self.should_skip(objects, key=upload_key, source_path=abspath):
+                        pass
                     else:
                         self.upload_file(abspath, upload_key, extra_args)
             else:

@@ -48,6 +48,16 @@ class Core:
                 Key=self.prefix,
             )
 
-    def exists_key(self, key: str) -> bool:
-        keys = self.bucket.objects.filter(Prefix=key)
-        return key in [k.key for k in keys]
+    def should_skip(self, objects_collection, key: str, source_path: str) -> bool:
+        objects = [
+            o
+            for o in objects_collection
+            if o.key == key
+        ]
+        if len(objects) > 0:
+            size = objects[0].size
+            print(objects[0].__class__)
+            if os.path.getsize(source_path) == size:
+                self.logger.info(f"skip upload. match filesize ({size} byte) s3://{self.bucket_name}/{key}")
+                return True
+        return False

@@ -59,6 +59,13 @@ $ s3local list-local -u s3://mybucket/artifacts/
 /Users/hiroshi.toyama/.s3local/s3/mybucket/artifacts/main3.log
 ```
 
+#### upload object
+
+```bash
+$ s3local upload -s tox.ini -u s3://mybucket/test/
+2023-05-31 10:44:08,474 INFO - Copying to s3: tox.ini => s3://mybucket/test/tox.ini
+```
+
 ## Python API
 
 ### download
