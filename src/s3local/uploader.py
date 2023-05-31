@@ -22,7 +22,9 @@ class Uploader(Core):
             objects = self.bucket.objects.filter(
                 Prefix=key,
             )
-            if skip_exist and self.should_skip(objects, key=key, source_path=source_path):
+            if skip_exist and self.should_skip(
+                objects, key=key, source_path=source_path
+            ):
                 pass
             else:
                 self.upload_file(source_path, key, extra_args)
@@ -35,7 +37,9 @@ class Uploader(Core):
                 for abspath, relative_path in pair.items():
                     upload_key = f"{self.prefix}{relative_path}"
 
-                    if skip_exist and self.should_skip(objects, key=upload_key, source_path=abspath):
+                    if skip_exist and self.should_skip(
+                        objects, key=upload_key, source_path=abspath
+                    ):
                         pass
                     else:
                         self.upload_file(abspath, upload_key, extra_args)
