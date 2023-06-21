@@ -52,7 +52,6 @@ class Core:
         objects = [o for o in objects_collection if o.key == key]
         if len(objects) > 0:
             size = objects[0].size
-            print(objects[0].__class__)
             if os.path.getsize(source_path) == size:
                 self.logger.info(
                     f"skip upload. match filesize ({size} byte) s3://{self.bucket_name}/{key}"
