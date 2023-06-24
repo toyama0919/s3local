@@ -54,7 +54,7 @@ class Core:
             size = objects[0].size
             if os.path.getsize(source_path) == size:
                 self.logger.info(
-                    f"skip upload. match filesize ({size} byte) s3://{self.bucket_name}/{key}"
+                    f"skip copy. match filesize ({size} byte) s3://{self.bucket_name}/{key}"
                 )
                 return True
         return False
