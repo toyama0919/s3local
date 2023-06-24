@@ -59,3 +59,14 @@ class Uploader(Core):
             f"Copying to s3: {local_path} => s3://{self.bucket_name}/{key}"
         )
         self.bucket.upload_file(local_path, key, ExtraArgs=extra_args)
+
+    def should_skip(self, objects_collection, key: str, source_path: str) -> bool:
+        objects = [o for o in objects_collection if o.key == key]
+        if len(objects) > 0:
+            size = objects[0].size
+            if os.path.getsize(source_path) == size:
+                self.logger.info(
+                    f"skip copy. match filesize ({size} byte) {source_path} > s3://{self.bucket_name}/{key}"
+                )
+                return True
+        return False
