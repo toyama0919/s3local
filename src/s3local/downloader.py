@@ -38,11 +38,9 @@ class Downloader(Core):
                         dst_path=local_dst_path,
                     )
         else:
-            local_dst_path = (dst_path or f"{self.root}/{self.prefix}")
+            local_dst_path = dst_path or f"{self.root}/{self.prefix}"
             if not (skip_exist and self.should_skip(self.prefix, local_dst_path)):
-                self.download_file(
-                    self.prefix, dryrun, dst_path=local_dst_path
-                )
+                self.download_file(self.prefix, dryrun, dst_path=local_dst_path)
 
     def should_skip(self, key: str, source_path: str) -> bool:
         size = self.bucket.Object(key).content_length
