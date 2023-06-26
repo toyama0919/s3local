@@ -8,19 +8,16 @@ class Downloader(Core):
         self,
         key: str,
         dryrun: bool = False,
-        skip_exist: bool = True,
         dst_path: str = None,
     ):
-        dst_path = dst_path or f"{self.root}/{key}"
+        # make dir
         dst_dir_path = os.path.dirname(dst_path)
-        s3_url = f"s3://{self.bucket_name}/{key}"
         os.makedirs(dst_dir_path, exist_ok=True)
-        if os.path.exists(dst_path) and skip_exist:
-            self.logger.info(f"skip already exists in local: {s3_url} > {dst_path}")
-        else:
-            self.logger.info(f"Copying: {s3_url} > {dst_path}")
-            if not dryrun:
-                self.bucket.download_file(key, dst_path)
+
+        s3_url = f"s3://{self.bucket_name}/{key}"
+        self.logger.info(f"Copying: {s3_url} > {dst_path}")
+        if not dryrun:
+            self.bucket.download_file(key, dst_path)
         self.download_paths.append(dst_path)
 
     def download(
@@ -30,19 +27,31 @@ class Downloader(Core):
             objects = self.bucket.objects.filter(
                 Prefix=self.prefix,
             )
-            for key in [o.key for o in objects]:
-                self.download_file(
-                    key,
-                    dryrun,
-                    skip_exist=skip_exist,
-                    dst_path=(
-                        f"{dst_path}/{os.path.basename(key)}" if dst_path else None
-                    ),
-                )
+            for o in objects:
+                local_dst_path = (
+                    f"{dst_path}/{os.path.basename(o.key)}" if dst_path else None
+                ) or f"{self.root}/{o.key}"
+                if not (skip_exist and self.should_skip(o.key, local_dst_path)):
+                    self.download_file(
+                        o.key,
+                        dryrun,
+                        dst_path=local_dst_path,
+                    )
         else:
-            self.download_file(
-                self.prefix, dryrun, skip_exist=skip_exist, dst_path=dst_path
-            )
+            local_dst_path = dst_path or f"{self.root}/{self.prefix}"
+            if not (skip_exist and self.should_skip(self.prefix, local_dst_path)):
+                self.download_file(self.prefix, dryrun, dst_path=local_dst_path)
+
+    def should_skip(self, key: str, source_path: str) -> bool:
+        size = self.bucket.Object(key).content_length
+
+        if os.path.exists(source_path) and os.path.isfile(source_path):
+            if os.path.getsize(source_path) == size:
+                self.logger.info(
+                    f"skip download. match filesize ({size} byte) s3://{self.bucket_name}/{key} > {source_path}"
+                )
+                return True
+        return False
 
     def list_download_path(self):
         self.download()
