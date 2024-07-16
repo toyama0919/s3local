@@ -28,6 +28,8 @@ class Downloader(Core):
                 Prefix=self.prefix,
             )
             for o in objects:
+                if o.key.endswith("/"):
+                    continue
                 local_dst_path = (
                     f"{dst_path}/{os.path.basename(o.key)}" if dst_path else None
                 ) or f"{self.root}/{o.key}"
